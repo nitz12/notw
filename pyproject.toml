@@ -2,7 +2,7 @@
 name = "notw"
 version = "0.1.0"
 description = ""
-authors = ["Replit user <<>>"]
+authors = ["Replit user <<nitz12>>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
