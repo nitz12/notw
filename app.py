@@ -13,7 +13,7 @@ CLIENT_SECRET = "xZJWNRwEm20dhtcc"
 
 # This is the URL that LinkedIn will redirect the user to after they authorize your app
 REDIRECT_URI = "http://localhost:5000/callback"
-REDIRECT_URI = "https://notw.dev-mkg.repl.co/callback"
+REDIRECT_URI = "https://notw.nitz12.repl.co/callback"
 
 
 @app.route("/")
