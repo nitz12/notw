@@ -1,0 +1,13 @@
+<html>
+  <head>
+    <title>Profile with Frame</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='styles/styles.css')}}">
+  </head>
+  <body>
+    <h1>Welcome, {{ name }}!</h1>
+    <img src="{{ url_for('getimg') }}" alt="Profile picture with Frame" width="400" height="400">
+    <br>
+<!--     <a href="{{ url_for('withFrame') }}" target="_self"><button>Download</button></a> -->
+    <a href="{{ url_for('dlimg') }}" target="_self"><button>Download</button></a>
+  </body>
+</html>

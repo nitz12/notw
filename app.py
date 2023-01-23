@@ -1,7 +1,9 @@
-from flask import Flask, redirect, request, session, url_for, render_template
+from flask import Flask, redirect, request, session, url_for, render_template, send_file
 import requests
 import os
 import random
+from PIL import Image, ImageDraw
+from io import BytesIO
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
@@ -54,6 +56,65 @@ def callback():
   return redirect(url_for("profile"))
 
 
+@app.route("/withFrame")
+def withFrame():
+
+  return render_template("profile_withframe.html",
+                         name=session.get("first_name") + " " +
+                         session.get("last_name"))
+
+
+@app.route("/dlimg")
+def dlimg():
+  img_bytes = process_img()
+
+  return send_file(img_bytes,
+                   as_attachment=True,
+                   download_name="img_with_frame.png",
+                   mimetype='image/png')
+
+
+def process_img():
+
+  # Open the image
+  im = Image.open(BytesIO(requests.get(session.get("prof_pic")).content))
+
+  # notw
+  basedir = os.path.abspath(os.path.dirname(__file__))
+  staticdir = os.path.join(basedir, 'static')
+  notw_file_path = os.path.join(staticdir, "notw.png")
+
+  notw = Image.open(notw_file_path)
+  im.paste(notw, (0, 0), notw.convert('RGBA'))
+
+  # Mask
+  mask = Image.new('L', im.size, 0)
+  draw = ImageDraw.Draw(mask)
+  draw.ellipse((0, 0, im.width, im.height), fill=255)
+
+  # Apply the mask to the image
+  cropped_im = im.copy()
+  cropped_im.putalpha(mask)
+
+  image_io = BytesIO()
+  cropped_im.save(image_io, format='PNG')
+  image_io.seek(0)
+
+  return (image_io)
+
+
+@app.route("/getimg")
+def getimg():
+
+  img_bytes = process_img()
+
+  return send_file(
+    img_bytes,
+    as_attachment=False,
+    # download_name="cropped_img.png",
+    mimetype='image/png')
+
+
 @app.route("/profile")
 def profile():
   # Check if the user is logged in
@@ -72,7 +133,11 @@ def profile():
   # print("Profile Data")
   # print(profile_data.keys())
   firstname_local = profile_data['localizedFirstName']
+  session["first_name"] = firstname_local
+
   lastname_local = profile_data['localizedLastName']
+  session["last_name"] = lastname_local
+
   profile_id = profile_data['id']
 
   # Get the user's profile picture information
@@ -84,7 +149,7 @@ def profile():
   ## 4 elements are returned with picture information four different scaling: 100*100, 200*200, 400*400 ,800*800
   max_size = 0
   max_size_link = ""
-  print('each ele')
+
   for ele in profpic_data['profilePicture']['displayImage~']['elements']:
 
     width = ele['data'][list(ele['data'].keys())[0]]['displaySize']['width']
@@ -94,7 +159,9 @@ def profile():
     if size > max_size:
       max_size = size
       max_size_link = ele['identifiers'][0]['identifier']
-  print(max_size_link)
+
+  session['prof_pic'] = max_size_link
+  print("session['prof_pic']", session['prof_pic'])
 
   #Get user's e-mail id
   mail_resp = requests.get(
@@ -105,7 +172,8 @@ def profile():
 
   # Render the profile page
   return render_template("profile.html",
-                         name=firstname_local + " " + lastname_local,
+                         name=session.get("first_name") + " " +
+                         session.get("last_name"),
                          profile_picture_url=max_size_link)
 
 

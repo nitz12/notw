@@ -110,6 +110,18 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "pillow"
+version = "9.4.0"
+description = "Python Imaging Library (Fork)"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+docs = ["furo", "olefile", "sphinx (>=2.4)", "sphinx-copybutton", "sphinx-inline-tabs", "sphinx-issues (>=3.0.1)", "sphinx-removed-in", "sphinxext-opengraph"]
+tests = ["check-manifest", "coverage", "defusedxml", "markdown2", "olefile", "packaging", "pyroma", "pytest", "pytest-cov", "pytest-timeout"]
+
+[[package]]
 name = "requests"
 version = "2.28.1"
 description = "Python HTTP for Humans."
@@ -169,7 +181,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "dd81747a58741e0bc3a553cb2f056b9abb8c16002d20e79e80ff955c001f3267"
+content-hash = "915a308027651b6cd7f76b57b7de04441194aff16211178c5562f90067e41443"
 
 [metadata.files]
 certifi = []
@@ -182,6 +194,7 @@ importlib-metadata = []
 itsdangerous = []
 jinja2 = []
 markupsafe = []
+pillow = []
 requests = []
 urllib3 = []
 werkzeug = []
