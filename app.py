@@ -79,6 +79,10 @@ def process_img():
   # Open the image
   im = Image.open(BytesIO(requests.get(session.get("prof_pic")).content))
 
+  # default resizing
+  print(im.size)
+  im = im.resize((800, 800))
+
   # notw
   basedir = os.path.abspath(os.path.dirname(__file__))
   staticdir = os.path.join(basedir, 'static')
@@ -161,7 +165,6 @@ def profile():
       max_size_link = ele['identifiers'][0]['identifier']
 
   session['prof_pic'] = max_size_link
-  print("session['prof_pic']", session['prof_pic'])
 
   #Get user's e-mail id
   mail_resp = requests.get(
